@@ -9,7 +9,7 @@ def create_database():
     """
     
     # connect to default database
-    conn = psycopg2.connect("host=localhost dbname=sparkifydb user=student password=student")
+    conn = psycopg2.connect("host=localhost dbname=studentdb user=student password=student")
 
     conn.set_session(autocommit=True)
     cur = conn.cursor()
