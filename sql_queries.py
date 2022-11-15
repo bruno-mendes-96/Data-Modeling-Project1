@@ -82,14 +82,14 @@ song_table_insert = ("""
 """)
 
 artist_table_insert = ("""
-    INSERT INTO songs (song_id, title, artist_id, year, duration)
+    INSERT INTO artists (artist_id, name, location, latitude, longitude)
     VALUES (%s, %s, %s, %s, %s)
 """)
 
 
 time_table_insert = ("""
-    INSERT INTO songs (song_id, title, artist_id, year, duration)
-    VALUES (%s, %s, %s, %s, %s)
+    INSERT INTO time (start_time, hour, day, week, month, year, weekday)
+    VALUES (%d, %d, %d, %d, %d, %d, %d)
 """)
 
 # FIND SONGS
