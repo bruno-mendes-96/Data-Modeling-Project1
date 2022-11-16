@@ -7,37 +7,46 @@ from sql_queries import *
 
 def process_song_file(cur, filepath):
     # open song file
-    df = 
+    df = pd.read_json(filepath, orient='index').T
 
     # insert song record
-    song_data = 
+    song_data_columns = ['song_id', 'title', 'artist_id', 'year', 'duration']
+    song_data = df[song_data_columns].iloc[0,:].values.tolist()
     cur.execute(song_table_insert, song_data)
     
     # insert artist record
-    artist_data = 
+    artist_columns = ['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']
+    artist_data = df[artist_columns].iloc[0,:].values.tolist()
     cur.execute(artist_table_insert, artist_data)
 
 
 def process_log_file(cur, filepath):
     # open log file
-    df = 
+    df = pd.read_json(filepath, lines=True)
 
     # filter by NextSong action
-    df = 
+    df = df[df['page'] == 'NextSong']
 
     # convert timestamp column to datetime
-    t = 
+    t = df[['ts']].copy()
+    t['start_time'] = t['ts'].apply(lambda x: pd.Timestamp(x, unit='ms'))
     
     # insert time data records
-    time_data = 
-    column_labels = 
-    time_df = 
+    t['year'] = t['start_time'].dt.year
+    t['month'] = t['start_time'].dt.month
+    t['weekday'] = t['start_time'].dt.weekday
+    t['hour'] = t['start_time'].dt.hour
+    t['day'] = t['start_time'].dt.day
+    t['week'] = t['start_time'].dt.isocalendar().week
+    column_labels_time = ['start_time', 'hour', 'day', 'week', 'month', 'year', 'weekday']
+    time_df = t[column_labels_time]
 
     for i, row in time_df.iterrows():
         cur.execute(time_table_insert, list(row))
 
     # load user table
-    user_df = 
+    user_columns = ['userId', 'firstName', 'lastName', 'gender', 'level']
+    user_df = df[user_columns]
 
     # insert user records
     for i, row in user_df.iterrows():
@@ -55,8 +64,10 @@ def process_log_file(cur, filepath):
         else:
             songid, artistid = None, None
 
+        timestamp = pd.Timestamp(row.ts, unit='ms')
+
         # insert songplay record
-        songplay_data = 
+        songplay_data = (timestamp, row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
         cur.execute(songplay_table_insert, songplay_data)
 
 
@@ -80,7 +91,7 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
-    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
+    conn = psycopg2.connect("host=localhost dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
     process_data(cur, conn, filepath='data/song_data', func=process_song_file)
