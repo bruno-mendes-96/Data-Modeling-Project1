@@ -37,7 +37,7 @@ song_table_create = ("""
         song_id TEXT PRIMARY KEY,
         title TEXT,
         artist_id TEXT,
-        year FLOAT,
+        year INTEGER,
         duration FLOAT
     )
 """)

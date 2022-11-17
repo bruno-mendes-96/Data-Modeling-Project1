@@ -1,5 +1,3 @@
-# Udacity - Project 1
-
 <h1> Project: Data Modeling with Postgres </h1>
 
 A startup called Sparkify wants to analyze the data they've been collecting on songs and user activity on their new music streaming app. The analytics team is particularly interested in understanding what songs users are listening to. Currently, they don't have an easy way to query their data, which resides in a directory of JSON logs on user activity on the app, as well as a directory with JSON metadata on the songs in their app.
@@ -86,4 +84,15 @@ songplays - FATO related to the playing songs in the app;
 ![Alt text](images/entity_diagram.png "Star schema")
 
 <h1> Running the Pipeline </h1>
+
+1 - Install dependencies;
+
+2 - Run <code>create_tables.py</code> to create the 
+environment;
+
+3 - Run <code>etl.py</code> to extract and transform the JSON files of data folder and load into Relational Database;
+
+4 - Use <code>etl.ipynb</code> to debug and correct functions of <code>etl.py</code> if necessary.
+
+
 
