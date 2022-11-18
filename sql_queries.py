@@ -11,8 +11,8 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 songplay_table_create = ("""
     CREATE TABLE IF NOT EXISTS songplays (
         songplay_id SERIAL UNIQUE PRIMARY KEY,
-        start_time TIMESTAMP,
-        usert_id INTEGER,
+        start_time TIMESTAMP NOT NULL,
+        user_id INTEGER NOT NULL,
         level TEXT,
         song_id TEXT,
         artist_id TEXT,
@@ -35,17 +35,17 @@ user_table_create = ("""
 song_table_create = ("""
     CREATE TABLE IF NOT EXISTS songs (
         song_id TEXT PRIMARY KEY,
-        title TEXT,
+        title TEXT NOT NULL,
         artist_id TEXT,
         year INTEGER,
-        duration FLOAT
+        duration FLOAT NOT NULL
     )
 """)
 
 artist_table_create = ("""
     CREATE TABLE IF NOT EXISTS artists (
         artist_id TEXT PRIMARY KEY,
-        name TEXT,
+        name TEXT NOT NULL,
         location TEXT,
         latitude FLOAT,
         longitude FLOAT
@@ -67,7 +67,7 @@ time_table_create = ("""
 # INSERT RECORDS
 
 songplay_table_insert = ("""
-    INSERT INTO songplays (start_time, usert_id, level, song_id, artist_id, session_id, location, user_agent)
+    INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     ON CONFLICT (songplay_id) DO NOTHING
 """)
@@ -103,8 +103,8 @@ song_select = ("""
     SELECT s.song_id, s.artist_id
     FROM songs as s
     LEFT JOIN artists a on a.artist_id = s.artist_id 
-    WHERE LOWER(s.title) = LOWER(%s) 
-      AND LOWER(a.name = LOWER(%s) and duration = %s
+    WHERE s.title = %s
+      AND a.name = %s and duration = %s
 """)
 
 # QUERY LISTS
