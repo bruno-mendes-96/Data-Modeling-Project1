@@ -6,6 +6,18 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    """
+    This procedure processes a song file whose filepath has been provided as an argument.
+    It extracts the song information in order to store it into the songs table.
+    Then it extracts the artist information in order to store it into the artists table.
+
+    INPUTS: 
+    * cur  - The cursor variable
+    * filepath - The file path to the song file
+
+    Returns nothing.
+    """
+
     # open song file
     df = pd.read_json(filepath, lines=True)
 
@@ -21,6 +33,22 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    """
+    This procedure processes a log file whose filepath has been provided as an argument.
+    It extracts the basic songplay information (timestamp, song, artist and length). 
+    Aditional time information (year, month, weekday, hour, day, week) is extracted 
+    and insert into time table.
+
+    Then it extracts the song_id and artist_id. Finally, songplay data (timestamp, userId, 
+    level, songid, artistid, sessionId, location, userAgent) is insert into songplay table.
+
+    INPUTS: 
+    * cur  - The cursor variable
+    * filepath - The file path to the song file
+
+    Returns nothing.
+    """
+
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -72,6 +100,19 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    This procedure processes read all files of the filepath input. Then, a loop is runned and 
+    over each file and the respective function are used to insert data into tables.
+
+    INPUTS: 
+    * cur  - The cursor variable
+    * conn - The connection variable
+    * filepath - The file path to the song file
+    * func - Function that will be executed over files
+
+    Returns nothing.
+    """
+
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -91,6 +132,10 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    This function create a database connection, create a cursor and execute the ETL process.
+    """
+
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
